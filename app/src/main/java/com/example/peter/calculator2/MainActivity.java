@@ -1,22 +1,19 @@
 package com.example.peter.calculator2;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button;
-    TextView textView;
-    int num;
-
-    int result = -1;
-    int recentKey;
-    boolean isOperationKey;
+    private Button button;
+    private TextView textView;
+    private int num;
+    private int result;
+    private int recentKey;
+    private boolean isOperationKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_sub).setOnClickListener(operationListener);
         findViewById(R.id.button_div).setOnClickListener(operationListener);
         findViewById(R.id.button_equal).setOnClickListener(operationListener);
-
     }
 
     // 数値が押された時の処理
-    View.OnClickListener numberListener = new View.OnClickListener() {
+    private View.OnClickListener numberListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             button = (Button) view;
@@ -59,12 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
             textView.append(button.getText());
             isOperationKey = false;
-
         }
     };
 
     // 演算子が押された時の処理
-    View.OnClickListener operationListener = new View.OnClickListener() {
+    private View.OnClickListener operationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             button = (Button) view;
@@ -74,31 +69,30 @@ public class MainActivity extends AppCompatActivity {
                 result = calc(recentKey, result, num);
                 textView.setText(String.valueOf(result));
                 isOperationKey = true;
-            } else if (result == 0 || isOperationKey == true){
+            } else if (result == 0) {
                 result = num;
                 textView.append(button.getText());
-            }else {
+            } else {
                 result = calc(button.getId(), result, num);
                 textView.append(button.getText());
             }
+
             num = 0;
             recentKey = button.getId();
         }
     };
 
     // 計算処理
-    public int calc(int operationKey,int value1, int value2) {
-        switch (operationKey){
+    private int calc(int operationKey, int value1, int value2) {
+        switch (operationKey) {
             case R.id.button_add:
                 return value1 + value2;
             case R.id.button_sub:
                 return value1 - value2;
             case R.id.button_div:
-                if (value1 == 0) {
-                    return value2;
-                } else if (value2 == 0) {
-                    return value1;
-                }else {
+                if (value1 == 0 || value2 == 0) {
+                    return 0;
+                } else {
                     return value1 / value2;
                 }
             default:
@@ -106,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void clear(View view) {
+    void clearResult(View view) {
         recentKey = R.id.button_equal;
         result = 0;
         isOperationKey = false;
